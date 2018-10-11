@@ -11,6 +11,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -25,16 +26,16 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 /**Class xử lý nghiệp vụ*/
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     TextView txtDate,txtTime;
     EditText editCv,editNd;
     Button btnDate,btnTime,btnAdd;
 
     //Khai báo Datasource lưu trữ danh sách công việc
-    ArrayList<JobInWeek>arrJob=new ArrayList<JobInWeek>();
+    ArrayList<JobInWeek> mArrJob = new ArrayList<JobInWeek>();
 
     //Khai báo ArrayAdapter cho ListView
-    ArrayAdapter<JobInWeek>adapter=null;
+    ArrayAdapter<JobInWeek> mAdapter = null;
     ListView lvCv;
     Calendar cal;
     Date dateFinish;
@@ -50,22 +51,22 @@ public class MainActivity extends Activity {
     /**Hàm dùng để load các control theo Id*/
     public void getFormWidgets()
     {
-        txtDate=(TextView) findViewById(R.id.txtdate);
-        txtTime=(TextView) findViewById(R.id.txttime);
-        editCv=(EditText) findViewById(R.id.editcongviec);
-        editNd=(EditText) findViewById(R.id.editnoidung);
-        btnDate=(Button) findViewById(R.id.btndate);
-        btnTime=(Button) findViewById(R.id.btntime);
-        btnAdd=(Button) findViewById(R.id.btncongviec);
-        lvCv=(ListView) findViewById(R.id.lvcongviec);
+        txtDate = (TextView) findViewById(R.id.txtdate);
+        txtTime = (TextView) findViewById(R.id.txttime);
+        editCv = (EditText) findViewById(R.id.editcongviec);
+        editNd = (EditText) findViewById(R.id.editnoidung);
+        btnDate = (Button) findViewById(R.id.btndate);
+        btnTime = (Button) findViewById(R.id.btntime);
+        btnAdd = (Button) findViewById(R.id.btncongviec);
+        lvCv = (ListView) findViewById(R.id.lvcongviec);
 
         //Gán DataSource vào ArrayAdapter
-        adapter=new ArrayAdapter<JobInWeek>
+        mAdapter = new ArrayAdapter<JobInWeek>
                 (this,
                         android.R.layout.simple_list_item_1,
-                        arrJob);
+                        mArrJob);
         //Gán Adapter vào ListView
-        lvCv.setAdapter(adapter);
+        lvCv.setAdapter(mAdapter);
     }
     /**Hàm lấy các thông số mặc định khi lần đầu tiền chạy ứng dụng*/
     public void getDefaultInfor()
@@ -128,54 +129,42 @@ public class MainActivity extends Activity {
 
     }
     /**Class sự kiện của ListView*/
-    private class MyListViewEvent implements
-            OnItemClickListener,
-            OnItemLongClickListener
-    {
+    private class MyListViewEvent implements OnItemClickListener, OnItemLongClickListener {
 
         @Override
-        public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                       int arg2, long arg3) {
+        public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             //Xóa vị trí thứ arg2
-            arrJob.remove(arg2);
-            adapter.notifyDataSetChanged();
+            mArrJob.remove(arg2);
+            mAdapter.notifyDataSetChanged();
             return false;
         }
 
         @Override
-        public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-                                long arg3) {
+        public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             //Hiển thị nội dung công việc tại vị trí thứ arg2
-            Toast.makeText(MainActivity.this,
-                    arrJob.get(arg2).getDesciption(),
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, mArrJob.get(arg2).getDesciption(), Toast.LENGTH_LONG).show();
         }
-
     }
     /**Hàm hiển thị DatePicker dialog*/
     public void showDatePickerDialog()
     {
         OnDateSetListener callback=new OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year,
-                                  int monthOfYear,
-                                  int dayOfMonth) {
-
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 //Mỗi lần thay đổi ngày tháng năm thì cập nhật lại TextView Date
-                txtDate.setText(
-                        (dayOfMonth) +"/"+(monthOfYear+1)+"/"+year);
+                txtDate.setText((dayOfMonth) +"/"+(monthOfYear+1)+"/"+year);
 
                 //Lưu vết lại biến ngày hoàn thành
                 cal.set(year, monthOfYear, dayOfMonth);
-                dateFinish=cal.getTime();
+                dateFinish = cal.getTime();
             }
         };
        /** các lệnh dưới này xử lý ngày giờ trong DatePickerDialog
            Sẽ giống với trên TextView khi mở nó lên*/
-        String s=txtDate.getText()+"";
-        String strArrtmp[]=s.split("/");
-        int ngay=Integer.parseInt(strArrtmp[0]);
-        int thang=Integer.parseInt(strArrtmp[1])-1;
-        int nam=Integer.parseInt(strArrtmp[2]);
+        String s = txtDate.getText()+"";
+        String strArrtmp[] = s.split("/");
+        int ngay = Integer.parseInt(strArrtmp[0]);
+        int thang = Integer.parseInt(strArrtmp[1])-1;
+        int nam = Integer.parseInt(strArrtmp[2]);
         DatePickerDialog pic=new DatePickerDialog(
                 MainActivity.this,
                 callback, nam, thang, ngay);
@@ -185,17 +174,15 @@ public class MainActivity extends Activity {
     /**Hàm hiển thị TimePickerDialog*/
     public void showTimePickerDialog()
     {
-        OnTimeSetListener callback=new OnTimeSetListener() {
+        OnTimeSetListener callback = new OnTimeSetListener() {
             public void onTimeSet(TimePicker view,
                                   int hourOfDay, int minute) {
 
                 //Xử lý lưu giờ và AM,PM
-                String s=hourOfDay +":"+minute;
-                int hourTam=hourOfDay;
-                if(hourTam>12)
-                    hourTam=hourTam-12;
-                txtTime.setText
-                        (hourTam +":"+minute +(hourOfDay>12?" PM":" AM"));
+                String s = hourOfDay +":"+minute;
+                int hourTam = hourOfDay;
+                if(hourTam>12) hourTam = hourTam-12;
+                txtTime.setText(hourTam +":"+minute +(hourOfDay>12?" PM":" AM"));
 
                 //Lưu giờ thực vào tag
                 txtTime.setTag(s);
@@ -203,29 +190,27 @@ public class MainActivity extends Activity {
                 //Lưu vết lại giờ vào hourFinish
                 cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 cal.set(Calendar.MINUTE, minute);
-                hourFinish=cal.getTime();
+                hourFinish = cal.getTime();
             }
         };
         /**Các lệnh dưới này xử lý ngày giờ trong TimePickerDialog
            Sẽ giống với trên TextView khi mở nó lên*/
-        String s=txtTime.getTag()+"";
-        String strArr[]=s.split(":");
-        int gio=Integer.parseInt(strArr[0]);
-        int phut=Integer.parseInt(strArr[1]);
-        TimePickerDialog time=new TimePickerDialog(
-                MainActivity.this,
-                callback, gio, phut, true);
+        String s = txtTime.getTag()+"";
+        String strArr[] = s.split(":");
+        int gio = Integer.parseInt(strArr[0]);
+        int phut = Integer.parseInt(strArr[1]);
+        TimePickerDialog time = new TimePickerDialog(MainActivity.this, callback, gio, phut, true);
         time.setTitle("Chọn giờ hoàn thành");
         time.show();
     }
     /**Hàm xử lý đưa công việc vào ListView khi nhấn nút Thêm Công việc*/
     public void processAddJob()
     {
-        String title=editCv.getText()+"";
-        String description=editNd.getText()+"";
-        JobInWeek job=new JobInWeek(title, description, dateFinish, hourFinish);
-        arrJob.add(job);
-        adapter.notifyDataSetChanged();
+        String title = editCv.getText()+"";
+        String description = editNd.getText()+"";
+        JobInWeek job = new JobInWeek(title, description, dateFinish, hourFinish);
+        mArrJob.add(job);
+        mAdapter.notifyDataSetChanged();
 
         //Sau khi cập nhật thì reset dữ liệu và cho focus tới editCV
         editCv.setText("");

@@ -49,14 +49,14 @@ public class JobInWeek {
     /**Lấy định dạng ngày */
     public String getDateFormat(Date d)
     {
-        SimpleDateFormat dft=new
+        SimpleDateFormat dft = new
                 SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         return dft.format(d);
     }
     /**Lấy định dạng giờ phút */
     public String getHourFormat(Date d)
     {
-        SimpleDateFormat dft=new
+        SimpleDateFormat dft = new
                 SimpleDateFormat("hh:mm a", Locale.getDefault());
         return dft.format(d);
     }
